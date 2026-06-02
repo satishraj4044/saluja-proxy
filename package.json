@@ -1,0 +1,6 @@
+{
+  "name": "saluja-proxy",
+  "version": "1.0.0",
+  "description": "Saluja Store API Proxy - Keys ko hide karne ke liye",
+  "private": true
+}
