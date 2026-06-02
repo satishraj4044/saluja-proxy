@@ -1,0 +1,68 @@
+<!-- 
+=======================================================
+  INDEX.HTML MEIN YE CHANGES KARO
+=======================================================
+
+STEP 1: Line 8798 ke aaspaas Fast2SMS apiKey wali line HATAO
+----------------------------------------------------------------
+Pehle tha:
+  const apiKey = OTP_CONFIG.fast2sms.apiKey;
+  const url = 'https://www.fast2sms.com/dev/bulkV2?authorization='+encodeURIComponent(apiKey)...
+
+Ab karo (poori fast2sms fetch call ko replace karo):
+-->
+
+<!-- FAST2SMS REPLACEMENT (OTP send function mein) -->
+<script>
+// Ye function apne existing OTP send code ki jagah use karo
+async function sendOtpViaSMS(mobile, otp) {
+  try {
+    const res = await fetch('https://saluja-proxy.vercel.app/api/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mobile: mobile, otp: otp })
+    });
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.error('OTP send error:', e);
+  }
+}
+</script>
+
+<!-- 
+=======================================================
+STEP 2: Line 10810 ke aaspaas Firebase config HATAO
+----------------------------------------------------------------
+Pehle tha (IN SABKO HATAO):
+  apiKey: "AIzaSyBi-mEmwsiiQaKEAkyHOqKB4QU-15M9yXA",
+  authDomain: "salujastore-4ad02.firebaseapp.com",
+  ... (poori firebaseConfig object)
+
+Ab karo — firebase.initializeApp() se PEHLE ye daalo:
+-->
+
+<!-- FIREBASE CONFIG REPLACEMENT -->
+<script>
+async function initFirebaseSecure() {
+  try {
+    const res = await fetch('https://saluja-proxy.vercel.app/api/firebase-config');
+    if (!res.ok) throw new Error('Config fetch failed');
+    const config = await res.json();
+    
+    // Firebase already initialized check
+    if (!firebase.apps.length) {
+      firebase.initializeApp(config);
+    }
+    
+    console.log('Firebase initialized securely ✅');
+  } catch (e) {
+    console.error('Firebase config error:', e);
+  }
+}
+
+// App load hone pe call karo
+window.addEventListener('load', function() {
+  initFirebaseSecure();
+});
+</script>
